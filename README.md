@@ -53,7 +53,7 @@ API Server
 
 ## 팀원
 
-### 프론트엔드 [Page](https://github.com/Dyeon-Development/YOUTUBE_RANKING_API)
+### 프론트엔드 [Page](https://github.com/Dyeon-Development/YOUTUBE_RANKING_FRONT)
 
 * 박희융
 
