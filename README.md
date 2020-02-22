@@ -6,11 +6,11 @@ API Server
 
 ## Architecture
 
-<img src="~" width="800px" height="600px"></img><br/>
+<img src="https://github.com/Dyeon-Development/YOUTUBE_RANKING_API/blob/master/images/dyeon_architecture.png" width="800px" height="600px"></img><br/>
 
-## ERD
+## Database Diagram
 
-<img src="~" width="550px" height="700px"></img><br/>
+<img src="https://github.com/Dyeon-Development/YOUTUBE_RANKING_API/blob/master/images/database_diagram.png" width="550px" height="700px"></img><br/>
 
 ## 핵심 기능
 
