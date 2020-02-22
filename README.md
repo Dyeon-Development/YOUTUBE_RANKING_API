@@ -6,7 +6,7 @@ API Server
 
 ## Architecture
 
-<img src="https://github.com/Dyeon-Development/YOUTUBE_RANKING_API/blob/master/images/dyeon_architecture.png" width="600px" height="400px"></img><br/>
+<img src="https://github.com/Dyeon-Development/YOUTUBE_RANKING_API/blob/master/images/dyeon_architecture.png" width="500px" height="350px"></img><br/>
 
 ## Database Diagram
 
