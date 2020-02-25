@@ -6,11 +6,11 @@ API Server
 
 ## Architecture
 
-<img src="~" width="800px" height="600px"></img><br/>
+<img src="https://github.com/Dyeon-Development/YOUTUBE_RANKING_API/blob/master/images/dyeon_architecture.png" width="500px" height="350px"></img><br/>
 
-## ERD
+## Database Diagram
 
-<img src="~" width="550px" height="700px"></img><br/>
+<img src="https://github.com/Dyeon-Development/YOUTUBE_RANKING_API/blob/master/images/database_diagram.png" width="600px" height="400px"></img><br/>
 
 ## 핵심 기능
 
@@ -53,7 +53,7 @@ API Server
 
 ## 팀원
 
-### 프론트엔드 [Page](https://github.com/Dyeon-Development/YOUTUBE_RANKING_API)
+### 프론트엔드 [Page](https://github.com/Dyeon-Development/YOUTUBE_RANKING_FRONT)
 
 * 박희융
 
