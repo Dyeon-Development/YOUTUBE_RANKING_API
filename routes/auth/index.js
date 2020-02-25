@@ -73,6 +73,7 @@ router.post('/signin', authUtil.checkNoToken, async (req, res) => {
     }    
 });
 
+// 토큰 검증 라우트
 router.post('/check', async (req, res) => {
     const result = jwt.verify(req.headers.token);
     if(result == -3)

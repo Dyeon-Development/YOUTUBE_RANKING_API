@@ -17,6 +17,7 @@ connect();
 const route = require('./routes');
 const APP_KEY = process.env.APP_KEY;
 
+// CORS issue를 해결하기 위해 허용 (react에서 막힘)
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
@@ -28,6 +29,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use('/', route);
+
 // Start the server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, async () => {
@@ -35,7 +37,9 @@ app.listen(PORT, async () => {
     console.log('Press Ctrl+C to quit.');
 });
 
+// 매일 자정 업데이트 함수 실행
 cron.schedule('0 0 * * *', async function(){
+    // 필요한 변수들을 미리 정의하지 않으면 app engine으로 deploy 시 오류 발생
     let channel_params, video_params;
     let i, j, k;
     let channel_id = [];
@@ -58,11 +62,13 @@ cron.schedule('0 0 * * *', async function(){
     let channel_list_BC = [];
     let nextToken = undefined;
 
+    // User collection에 존재하는 모든 유튜버들을 불러와서 String 화 시킨다.
     channel_id = await User.find({type: 'youtuber'});
     for(i = 0 ; i < channel_id.length ; i++)
         list_channel[i] = channel_id[i].id;
     channel_id = list_channel.join(',');
-    // 채널 정보 저장
+
+    // 유튜버 채널 정보 저장
     channel_params = {
         key : APP_KEY,
         part: "id,snippet,statistics",
@@ -94,9 +100,11 @@ cron.schedule('0 0 * * *', async function(){
         }
     } while(nextToken)
     nextToken = undefined;
+
     // 각 채널에 해당하는 동영상 정보 조회 및 저장
     list_channel = await Channel.find({createdAt: {"$gte": moment().format('YYYY-MM-DD')}});
-    // 동영상 id 조회
+
+    // 동영상 id 조회 (현재 시점부터 7일 전 까지)
     for(i = 0 ; i < list_channel.length ; i++) {
         video_id = [];
         video_params = {
@@ -119,6 +127,7 @@ cron.schedule('0 0 * * *', async function(){
             video_id.push(res_video_id.data.items[j].id.videoId);
         } while(nextToken)
         j = 0;
+
         // 동영상 상세 정보 조회
         do {
             sub_video_id = video_id.slice((50 * j), (50 * (j+1)));
@@ -130,6 +139,7 @@ cron.schedule('0 0 * * *', async function(){
                     id: sub_video_id.join(','),
                 }
             });
+
             // 동영상 상세 정보 저장
             for(k = 0 ; k < res_video_info.data.items.length ; k++) {
                 let video = new Video({
@@ -154,12 +164,14 @@ cron.schedule('0 0 * * *', async function(){
 
     for(i = 0 ; i < list_channel.length ; i++) {
         list_video = await Video.find({channel: list_channel[i]._id, createdAt: {"$gte": moment().format('YYYY-MM-DD')}});
+        // 비디오 존재하지 않을 시, 전부 0 으로 처리
         if(list_video.length === 0) {
             weekly_viewCount = 0;
             weekly_likeCount = 0;
             weekly_dislikeCount = 0;
             weekly_commentCount = 0;
         } else {
+            // viewCount 기준으로 내림차순
             list_video.sort((a,b) => (a.viewCount > b.viewCount) ? -1 : ( (b.viewCount > a.viewCount) ? 1 : 0));
             for(j = 0 ; j < list_video.length ; j++) {
                 if(list_video[j].viewCount)
@@ -172,6 +184,7 @@ cron.schedule('0 0 * * *', async function(){
                     weekly_commentCount += list_video[j].commentCount;
             }
         }
+        // 비디오 존재하지 않을 시, 전부 0 으로 처리
         if(list_video.length === 0)
         {
             VF_index = 0;
@@ -182,10 +195,12 @@ cron.schedule('0 0 * * *', async function(){
         else
         {
             VF_index = weekly_viewCount / list_video.length + list_video[0].viewCount;
+            // 분모가 0 일 경우 0으로 처리
             if((weekly_likeCount + weekly_dislikeCount) == 0)
                 VE_index = 0;
             else
                 VE_index = (weekly_likeCount / (weekly_likeCount + weekly_dislikeCount)) * 100;
+            // 분모가 0 일 경우 0으로 처리
             if(list_channel[i].subCount == 0)
                 VC_index = 0;
             else
